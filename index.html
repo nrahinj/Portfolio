@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./Assets/Professional_Image.jpg" />
+    <title>Nikhil B. Rahinj Portfolio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Three.js for 3D background animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        /* Base color palette using CSS variables for theming */
+        :root,
+        body.theme-default {
+            --bg-color: #F3F4F6;
+            --card-bg-color: #FFFFFF;
+            --card-bg-transparent: rgba(255, 255, 255, 0.15);
+            --border-color: #E5E7EB;
+            --text-color: #1F2937;
+            --sub-text-color: #6B7280;
+            --accent-color: #2563EB;
+            --accent-light: #BFDBFE;
+            --dot-color: #0004fb;
+        }
+
+        body.theme-dark {
+            --bg-color: #1F2937;
+            --card-bg-color: #2C3E50;
+            --border-color: #37474F;
+            --text-color: #ECF0F1;
+            --sub-text-color: #BDC3C7;
+            --accent-color: #00a6ff;
+            --accent-light: #bad5e5;
+            --dot-color: #00a6ff;
+        }
+
+        body.theme-forest {
+            --bg-color: #eaf6ed;
+            --card-bg-color: #FFFFFF;
+            --border-color: #E2F0EA;
+            --text-color: #2D3A3A;
+            --sub-text-color: #4A5568;
+            --accent-color: #2F855A;
+            --accent-light: #C6F6D5;
+            --dot-color: #34d399;
+        }
+
+        body.theme-sunset {
+            --bg-color: #FFFBF5;
+            --card-bg-color: #FEFCE8;
+            --border-color: #FDE68A;
+            --text-color: #4A2E1F;
+            --sub-text-color: #7C3A19;
+            --accent-color: #9a0505;
+            --accent-light: #e3c5c5;
+            --dot-color: #7d4141;
+        }
+
+        /* General body styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 3D Dot Animation Background */
+        #scene-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        /* Welcome Message */
+        .welcome-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            text-align: center;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+        }
+
+        .welcome-message.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .welcome-message h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px var(--dot-color);
+            margin: 0;
+            transition: text-shadow 1s ease-in-out;
+        }
+
+        .welcome-message p {
+            font-size: 1rem;
+            font-weight: 400;
+            margin-top: 10px;
+            color: var(--sub-text-color);
+            transition: color 1s ease-in-out;
+        }
+
+        /* Portfolio Sections */
+        hr.themed-line {
+            height: 1px;
+            background: var(--accent-color);
+            border: none;
+            margin: 0.1rem 0;
+            opacity: 0.7;
+            transition: background 0.3s ease;
+        }
+
+        .section-header {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            transition: color 0.3s ease;
+            padding: 0.1rem 0.1rem;
+            border-radius: 0.5rem;
+            border: 2px solid var(--accent-color);
+            background-color: var(--card-bg-transparent);
+            transition: transform 0.3s ease-in-out, border-color 0.3s ease;
+        }
+
+        .image {
+            height: 80px;
+            width: 80px;
+            border-radius: 10%;
+            border: 1px solid var(--accent-color);
+        }
+
+        .image1 {
+            height: 150px;
+            width: 150px;
+            border-radius: 10%;
+            border: 1px solid var(--accent-color);
+            transition: border-color 0.3s ease;
+        }
+
+        .card {
+            background-color: var(--card-bg-transparent);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease, border-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-link {
+            transition: color 0.3s ease-in-out;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        .theme-button {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .theme-button:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-button.active {
+            box-shadow: 0 0 0 3px var(--accent-color);
+        }
+
+        .animate-name {
+            animation: slide-up-fade-in 1s ease-out;
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .mobile-menu {
+            transform: translateY(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .mobile-menu.is-open {
+            transform: translateY(0);
+        }
+
+        @keyframes slide-up-fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-[--bg-color] text-[--text-color]">
+    <!-- 3D Background elements -->
+    <div id="scene-container"></div>
+    <div class="welcome-message" id="welcomeMessage">
+    </div>
+
+    <!-- Main page content -->
+    <!-- Navigation -->
+    <header
+        class="sticky top-0 z-50 bg-[--card-bg-transparent] bg-opacity-80 backdrop-filter backdrop-blur-lg border-b border-[--border-color]">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-[--accent-color]">Nikhil B. Rahinj</a>
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#about" class="nav-link font-medium">About</a>
+                <a href="#projects" class="nav-link font-medium">Projects</a>
+                <a href="#skills" class="nav-link font-medium">Skills</a>
+                <a href="#experience" class="nav-link font-medium">Experience</a>
+                <a href="#education" class="nav-link font-medium">Education</a>
+                <a href="#certifications" class="nav-link font-medium">Certifications</a>
+                <a href="#resume" class="nav-link font-medium">Resume</a>
+                <a href="#achievement" class="nav-link font-medium">Achievement</a>
+                <a href="#interest" class="nav-link font-medium">Interest</a>
+                <a href="#contact" class="nav-link font-medium">Contact</a>
+            </div>
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden text-[--text-color] focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu"
+            class="mobile-menu md:hidden absolute top-16 left-0 w-full bg-[--card-bg-color] p-4 text-center border-t border-[--border-color] z-40">
+            <a href="#about" class="block py-2 nav-link font-medium" onclick="toggleMobileMenu()">About</a>
+            <a href="#projects" class="block py-2 nav-link font-medium" onclick="toggleMobileMenu()">Projects</a>
+            <a href="#skills" class="block py-2 nav-link font-medium" onclick="toggleMobileMenu()">Skills</a>
+            <a href="#experience" class="block py-2 nav-link font-medium" onclick="toggleMobileMenu()">Experience</a>
+            <a href="#education" class="block py-2 nav-link font-medium" onclick="toggleMobileMenu()">Education</a>
+            <a href="#certifications" class="block py-2 nav-link font-medium"
+                onclick="toggleMobileMenu()">Certifications</a>
+            <a href="#resume" class="block py-2 nav-link font-medium" onclick="toggleMobileMenu()">Resume</a>
+            <a href="#achievement" class="block py-2 nav-link font-medium" onclick="toggleMobileMenu()">Achievement</a>
+            <a href="#interest" class="block py-2 nav-link font-medium" onclick="toggleMobileMenu()">Interest</a>
+            <a href="#contact" class="block py-2 nav-link font-medium" onclick="toggleMobileMenu()">Contact</a>
+        </div>
+    </header>
+    <!-- Theme Selector moved below the navigation bar -->
+    <div class="container mx-auto px-4 flex justify-end items-center mt-4">
+        <span class="text-sm font-medium text-[--text-color] hidden md:block mr-2">Theme ==> </span>
+        <div class="flex items-center space-x-2">
+            <button data-theme="default"
+                class="theme-button w-8 h-8 rounded-full bg-[#F3F4F6] border-2 border-transparent"></button>
+            <button data-theme="dark"
+                class="theme-button w-8 h-8 rounded-full bg-[#1F2937] border-2 border-transparent"></button>
+            <button data-theme="forest"
+                class="theme-button w-8 h-8 rounded-full bg-[#2F855A] border-2 border-transparent"></button>
+            <button data-theme="sunset"
+                class="theme-button w-8 h-8 rounded-full bg-[#9a0505] border-2 border-transparent"></button>
+
+        </div>
+
+    </div>
+
+    <main class="container mx-auto px-4 py-16">
+        <!-- Hero Section -->
+        <section id="hero" class="text-center py-20 md:py-32">
+            <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">
+                Hello, I'm <span class="text-[--accent-color] animate-name">Nikhil B. Rahinj.</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-[--sub-text-color] mb-8 indent-8 text-justify">
+                To leverage my knowledge of civil engineering fundamentals including planning, drafting, estimation, and
+                modern design tools to contribute to quality project delivery, while continuously upgrading my skills in
+                the field.
+            </p>
+            <a href="#contact"
+                class="bg-[--accent-color] text-white px-8 py-3 rounded-full font-bold shadow-md hover:shadow-lg transition-shadow duration-300">
+                Get in Touch
+            </a>
+        </section>
+        <hr class="themed-line">
+        <hr class="themed-line">
+
+        <!-- About Section -->
+        <section id="about" class="py-16 animate-on-scroll">
+            <h2 class="section-header">About Me</h2>
+            <div
+                class="bg-[var(--card-bg-transparent)] rounded-3xl p-8 md:p-12 shadow-md flex flex-col md:flex-row items-center md:items-start gap-8 indent-10 border-2 border-[--accent-color] ">
+                <img src="./Assets/Professional_Image.jpg" alt="Profile Photo"
+                    class="rounded-full w-48 h-48 md:w-56 md:h-56 object-cover mb-4 md:mb-0 border-2 border-[--accent-color]">
+                <p class="text-lg md:text-xl leading-relaxed text-justify ">I am a <b>Civil Engineer</b> with strong
+                    <b>knowledge in drafting, estimation, and project documentation.</b> As part of my academic project,
+                    I
+                    worked on the <b> planning and modeling of a G+1 residential building,</b> where I prepared
+                    architectural drawings, carried out estimation, and developed a 3D model using <b>AutoCAD</b>,
+                    <b>Revit
+                        Architecture</b>, and <b>MS Excel.</b>
+                    <br>
+                    &nbsp; To gain industry exposure, I completed two internships. At ATS Learning Solutions, I worked
+                    as an
+                    <b> Autodesk Revit Architecture Intern</b>, where I prepared plans, elevations, sections, and 3D
+                    visualizations. At Ekvira Properties, I worked as a <b>Site Engineer Intern</b>, where I observed
+                    daily
+                    construction activities, monitored progress, and understood the practical application of drawings
+                    and estimates.
+                    <br>
+                    &nbsp; These experiences provided me with a balanced understanding of both office-based design and
+                    site
+                    practices. As a fresher, I aim to apply my skills, learn from experienced professionals, and
+                    contribute effectively to civil engineering projects.
+                </p>
+            </div>
+        </section>
+        <hr class="themed-line">
+        <hr class="themed-line">
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-16 animate-on-scroll">
+            <h2 class="section-header">Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project Card 1 -->
+                <div class="card rounded-2xl p-6 shadow-md border-2 border-[--accent-color]">
+                    <div class="w-full h-auto  flex justify-center items-center">
+                        <img src="./Assets/Project_Ele_1.jpg" alt="Site Engineer Photo" class="image1">
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-[--text-color] text-center">Integrated
+                        Planning, Structural Design, Estimation, and 3D Modeling of a Residential Building.</h3>
+                    <p class="text-[--sub-text-color] text-sm mb-4 text-justify indent-8">The project focused on the
+                        planning,
+                        drafting, and design of a G+1 residential building on a plot size of 292.78 sq.m. The work
+                        included preparation of architectural plans, structural analysis, and design of key elements
+                        such as beams, columns, slabs, and footings to ensure stability and safety.</p>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <span
+                            class="bg-[--accent-light] text-[--accent-color] px-3 py-1 rounded-full font-medium">Structural
+                            Analysis</span>
+                        <span
+                            class="bg-[--accent-light] text-[--accent-color] px-3 py-1 rounded-full font-medium">AutoCAD</span>
+                        <span class="bg-[--accent-light] text-[--accent-color] px-3 py-1 rounded-full font-medium">Revit
+                            Architecture</span>
+                        <span
+                            class="bg-[--accent-light] text-[--accent-color] px-3 py-1 rounded-full font-medium">ETABS</span>
+                        <span
+                            class="bg-[--accent-light] text-[--accent-color] px-3 py-1 rounded-full font-medium">Excel</span>
+                    </div>
+                </div>
+                <!-- Project Card 2 -->
+                <div class="card rounded-2xl p-6 shadow-md border-2 border-[--accent-color]">
+                    <div class="w-full h-auto  flex justify-center items-center">
+                        <img src="./Assets/Indrayani-river.jpg" alt="Site Engineer Photo" class="image1">
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-[--text-color] text-center">Revitalization of
+                        Indrayani Riverfront : An Integrated Approach Toward Urban Development and Environmental
+                        Sustainability.</h3>
+                    <p class="text-[--sub-text-color] text-sm mb-4 text-justify indent-8">The Indrayani Riverfront
+                        Rejuvenation project promotes ecology, heritage, and citizen participation through parks,
+                        plantations, improved ghats, and walkways. By integrating green infrastructure, better
+                        connectivity, and inclusive facilities, it restores the river’s natural character while
+                        enhancing flood resilience. The initiative balances urban growth with sustainability, creating a
+                        vibrant, spiritual public space.</p>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <span
+                            class="bg-[--accent-light] text-[--accent-color] px-3 py-1 rounded-full font-medium">QGIS</span>
+                    </div>
+                </div>
+                <!-- Project Card 3 -->
+                <div class="card rounded-2xl p-6 shadow-md border-2 border-[--accent-color]">
+                    <div class="w-full h-auto  flex justify-center items-center">
+                        <img src="./Assets/Slope.jpg" alt="Site Engineer Photo" class="image1">
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-[--text-color] text-center">Slope Analysis
+                        Using Spatial Techniques.</h3>
+                    <p class="text-[--sub-text-color] text-sm mb-4 text-justify indent-8">Slope analysis using spatial
+                        techniques
+                        offers valuable insights into terrain behavior and planning strategies. By combining DEM data
+                        with geospatial tools, this study demonstrates a robust method for assessing terrain stability,
+                        reducing disaster risk, and enhancing environmental planning.</p>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <span
+                            class="bg-[--accent-light] text-[--accent-color] px-3 py-1 rounded-full font-medium">QGIS</span>
+                        <span
+                            class="bg-[--accent-light] text-[--accent-color] px-3 py-1 rounded-full font-medium">ArcGIS</span>
+                        <span
+                            class="bg-[--accent-light] text-[--accent-color] px-3 py-1 rounded-full font-medium">Excel</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <hr class="themed-line">
+        <hr class="themed-line">
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-16 animate-on-scroll">
+            <h2 class="section-header">Skills</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 ">
+                <div
+                    class="card flex flex-col items-center justify-center text-center p-4 rounded-2xl shadow-md border-2 border-[--accent-color]">
+                    <span class="text-4xl"><img src="./Assets/cad-file.png" alt="" class="image"></span>
+                    <p class="mt-2 text-sm font-medium bg[./cad-file.png]">AutoCAD</p>
+                </div>
+                <div
+                    class="card flex flex-col items-center justify-center text-center p-4 rounded-2xl shadow-md border-2 border-[--accent-color]">
+                    <span class="text-4xl"><img src="./Assets/revit.png" alt="" class="image"></span>
+                    <p class="mt-2 text-sm font-medium">Revit Arch.</p>
+                </div>
+                <div
+                    class="card flex flex-col items-center justify-center text-center p-4 rounded-2xl shadow-md border-2 border-[--accent-color]">
+                    <span class="text-4xl"><img src="./Assets/gis.png" alt="" class="image"></span>
+                    <p class="mt-2 text-sm font-medium">QGIS</p>
+                </div>
+                <div
+                    class="card flex flex-col items-center justify-center text-center p-4 rounded-2xl shadow-md border-2 border-[--accent-color]">
+                    <span class="text-4xl"><img src="./Assets/logo.png" alt="" class="image"></span>
+                    <p class="mt-2 text-sm font-medium">Excel</p>
+                </div>
+                <div
+                    class="card flex flex-col items-center justify-center text-center p-4 rounded-2xl shadow-md border-2 border-[--accent-color]">
+                    <span class="text-4xl"><img src="./Assets/office.png" alt="" class="image"></span>
+                    <p class="mt-2 text-sm font-medium">Office Tools</p>
+                </div>
+                <div
+                    class="card flex flex-col items-center justify-center text-center p-4 rounded-2xl shadow-md border-2 border-[--accent-color]">
+                    <span class="text-4xl"><img src="./Assets/human.png" alt="" class="image"></span>
+                    <p class="mt-2 text-sm font-medium">GPT (AI) Use</p>
+                </div>
+            </div>
+        </section>
+        <hr class="themed-line">
+        <hr class="themed-line">
+
+        <!-- Experience Section -->
+        <section id="experience" class="py-16 animate-on-scroll">
+            <h2 class="section-header">Experience</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4x1 mx-auto">
+                <div class="card rounded-2xl p-6 shadow-md border-2 border-[--accent-color]">
+                    <!-- Top section for the image -->
+                    <div class="w-full h-auto  flex justify-center items-center">
+                        <img src="./Assets/civil-engineer.png" alt="Site Engineer Photo" class="image">
+                    </div>
+                    <h3 class="text-xl font-semibold text-center">Site Engineer Intern.</h3>
+                    <p class="text-[--sub-text-color] mt-1">Ekvira Properties | Pune, Maharashtra. | Summer 2025</p>
+                    <ul class="list-disc list-inside mt-2 text-sm text-[--text-color] text-justify">
+                        <li>Supervise daily site work.</li>
+                        <li>Conduct site inspections and safety checks.</li>
+                    </ul>
+                </div>
+                <div class="card rounded-2xl p-6 shadow-md border-2 border-[--accent-color]">
+                    <!-- Top section for the image -->
+                    <div class="w-full h-auto  flex justify-center items-center">
+                        <img src="./Assets/developer.png" alt="Site Engineer Photo" class="image">
+                    </div>
+                    <h3 class="text-xl font-semibold text-center">Trainee – Autodesk Revit.</h3>
+                    <p class="text-[--sub-text-color] mt-1">ATS Learning Solutions. | Pune, Maharashtra. | Summer 2024
+                    </p>
+                    <ul class="list-disc list-inside mt-2 text-sm text-[--text-color] text-justify">
+                        <li>Prepared basic 2D drafts and 3D models of residential building layouts using Autodesk Revit.
+                        </li>
+                        <li>Learned plan drafting, elevation detailing, and quantity estimation through Revit tools.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <hr class="themed-line">
+        <hr class="themed-line">
+
+        <!-- Education Section -->
+        <section id="education" class="py-16 animate-on-scroll">
+            <h2 class="section-header">Education</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4x3 mx-auto ">
+                <div class="card rounded-2xl p-6 shadow-md border-2 border-[--accent-color]">
+                    <h3 class="text-xl font-semibold text-center">B.Tech in Civil Engineering</h3>
+                    <p class="text-[--sub-text-color] mt-1">Savitribai Phule Pune University (SPPU) | June 2026.</p>
+                    <ul class="list-disc list-inside mt-2 text-sm text-[--text-color]">
+                        <li>CGPA :- 8.62.</li>
+                        <li>College Name :- MIT Academy of Engineering.</li>
+
+                    </ul>
+                </div>
+                <div class="card rounded-2xl p-6 shadow-md border-2 border-[--accent-color]">
+                    <h3 class="text-xl font-semibold text-center">Diplomain in Civil Engineering</h3>
+                    <p class="text-[--sub-text-color] mt-1">Maharashtra State Board of Technical Education (MSBTE) |
+                        June 2023.</p>
+                    <ul class="list-disc list-inside mt-2 text-sm text-[--text-color]">
+                        <li>Percentage :- 85.05%.</li>
+                        <li>College Name :- Government Polytechnic Nanded.</li>
+
+                    </ul>
+                </div>
+                <div class="card rounded-2xl p-6 shadow-md border-2 border-[--accent-color]">
+                    <h3 class="text-xl font-semibold text-center">10<sup>Th</sup> Standard (Secondary Education).</h3>
+                    <p class="text-[--sub-text-color] mt-1">Maharashtra State Board of Secondary &
+                        Higher Secondary Education, Pune (MSBSHSE) | July 2020.</p>
+                    <ul class="list-disc list-inside mt-2 text-sm text-[--text-color] ">
+                        <li>Percentage :- 85.80%..</li>
+                        <li>School Name -: Nagnath Vidhyalaya Morgaon.</li>
+
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <hr class="themed-line">
+        <hr class="themed-line">
+
+        <!-- Certifications Section -->
+        <section id="certifications" class="py-16 animate-on-scroll">
+            <h2 class="section-header">Certifications</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mx-auto ">
+                <div class="card rounded-2xl p-6 shadow-md border-2 border-[--accent-color]">
+                    <h3 class="text-xl font-semibold text-center">Revit Architecture.</h3>
+                    <p class="text-[--sub-text-color] mt-1 text-center">Autodesk | 5 August 2024
+                    </p>
+                </div>
+                <div class="card rounded-2xl p-6 shadow-md border-2 border-[--accent-color]">
+                    <h3 class="text-xl font-semibold text-center">Wastewater Treatment and Recycling By IIT Kharagpur
+                    </h3>
+                    <p class="text-[--sub-text-color] mt-1 text-center">NPTEL | 2024</p>
+                </div>
+            </div>
+        </section>
+        <hr class="themed-line">
+        <hr class="themed-line">
+
+        <!-- Resume Section -->
+        <section id="resume" class="py-16 animate-on-scroll">
+            <h2 class="section-header">Resume</h2>
+            <div
+                class="bg-[--card-bg-transparent] rounded-3xl p-8 shadow-md max-w-6xl mx-auto text-center border-2 border-[--accent-color]">
+                <p class="text-lg md:text-xl leading-relaxed text-[--text-color]">
+                    View my Digital full resume for a detailed look at my skills and experience.
+                </p>
+                <a href="./Nikhil_R_Digital_Resume.html"
+                    class="inline-block mt-6 bg-[--accent-color] text-white px-8 py-3 rounded-full font-bold shadow-md hover:shadow-lg transition-shadow duration-300">
+                    View Resume
+                </a>
+            </div>
+        </section>
+        <hr class="themed-line">
+        <hr class="themed-line">
+
+        <!-- Achievement Section -->
+        <section id="achievement" class="py-16 animate-on-scroll">
+            <h2 class="section-header">Achievements</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4x3 mx-auto">
+                <div class="card rounded-2xl p-6 shadow-md border-2 border-[--accent-color] ">
+                    <h3 class="text-xl font-semibold text-center">Research Work Poster Presentation Competition at IIT
+                        Bombay.</h3>
+                    <p class="text-[--sub-text-color] mt-1 text-justify indent-4">Revitalization of indrayani riverfront
+                        : an integrated
+                        approach toward urban development and environmental sustainability. | B.tech Project. | 17
+                        December 2024.</p>
+                    <!-- <ul class="list-disc list-inside mt-2 text-sm text-[--text-color] text-justify">
+                        <li>CGPA :- 8.62.</li>
+                        <li>College Name :- MIT Academy of Engineering.</li>
+
+                    </ul> -->
+                </div>
+
+                <div class="card rounded-2xl p-6 shadow-md border-2 border-[--accent-color]">
+                    <h3 class="text-xl font-semibold text-center">Smart Cities - A Sustainable Development.</h3>
+                    <p class="text-[--sub-text-color] mt-1 indent-4">Organized by Student Chapter (MITAoE) of Indian
+                        Geotechnical
+                        Society's Pune Chapter. | Gold Grade. | 29 January - 02 February 2024.</p>
+                    <!-- <ul class="list-disc list-inside mt-2 text-sm text-[--text-color] text-justify">
+                        <li>Percentage :- 85.80%..</li>
+                        <li>School Name -: Nagnath Vidhyalaya Morgaon.</li>
+
+                    </ul> -->
+                </div>
+                <div class="card rounded-2xl p-6 shadow-md border-2 border-[--accent-color]">
+                    <h3 class="text-xl font-semibold text-center ">Speech Competition at Government Polytechnic Nanded.
+                    </h3>
+                    <p class="text-[--sub-text-color] mt-1 indent-4">Birth Anniversary of Chhatrapati Shivaji Maharaj,
+                        Mahatma
+                        Jyotiba Phule And Dr. B. R. Ambedkar. | Public Speech. | 30 April 2022.</p>
+                    <!-- <ul class="list-disc list-inside mt-2 text-sm text-[--text-color] text-justify">
+                        <li>Percentage :- 85.80%..</li>
+                        <li>School Name -: Nagnath Vidhyalaya Morgaon.</li>
+
+                    </ul> -->
+                </div>
+            </div>
+        </section>
+        <hr class="themed-line">
+        <hr class="themed-line">
+
+        <!-- Interest Section -->
+        <section id="interest" class="py-16 animate-on-scroll">
+            <h2 class="section-header">Interest</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-4x3 mx-auto">
+                <div class="card rounded-2xl p-6 shadow-md border-2 border-[--accent-color]">
+                    <h6 class="font-semibold text-center">Reading Books (Novels).</h6>
+                </div>
+                <div class="card rounded-2xl p-6 shadow-md border-2 border-[--accent-color]">
+                    <h3 class="font-semibold text-center">Listening Music.</h3>
+
+                </div>
+                <div class="card rounded-2xl p-6 shadow-md border-2 border-[--accent-color]">
+                    <h3 class=" font-semibold text-center">Watching Documentries.</h3>
+
+                </div>
+                <div class="card rounded-2xl p-6 shadow-md border-2 border-[--accent-color]">
+                    <h3 class="font-semibold text-center">Programming (Coding).</h3>
+
+                </div>
+        </section>
+        <hr class="themed-line">
+        <hr class="themed-line">
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-16 animate-on-scroll">
+            <h2 class="section-header">Contact</h2>
+            <div
+                class="bg-[--card-bg-transparent] rounded-3xl p-8 shadow-md max-w-lg mx-auto border-2 border-[--accent-color]">
+                <p class="text-center text-lg mb-6">
+                    I'm currently seeking a full-time position. Feel free to connect!
+                </p>
+                <form action="https://api.web3forms.com/submit" method="POST">
+                    <input type="hidden" name="access_key" value="6b78ac55-f9ed-4b3c-8b8c-71dd81a24aa2">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-[--text-color] mb-1">Name</label>
+                        <input type="text" id="name" name="name" placeholder="Please Enter Your Name."
+                            class="w-full p-3 rounded-lg bg-[--bg-color] border-2 border-[--accent-color] focus:outline-none focus:ring-2 focus:ring-[--accent-color] text-[--text-color] "
+                            class="form-control">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-[--text-color] mb-1">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Please Enter Your Email."
+                            class="w-full p-3 rounded-lg bg-[--bg-color] border-2 border-[--accent-color] focus:outline-none focus:ring-2 focus:ring-[--accent-color] text-[--text-color]">
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-[--text-color] mb-1">Message</label>
+                        <textarea id="message" name="message" rows="4" placeholder="Enter Your Message."
+                            class="w-full p-3 rounded-lg bg-[--bg-color] border-2 border-[--accent-color] focus:outline-none focus:ring-2 focus:ring-[--accent-color] text-[--text-color]"></textarea>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-[--accent-color] text-white p-3 rounded-lg font-bold shadow-md hover:shadow-lg transition-shadow duration-300">
+                        Send Message
+                    </button>
+                    <div id="status-message" class="mt-4 text-center text-sm font-medium hidden"></div>
+                </form>
+                <!-- Submission message -->
+                <div id="submissionMessage" class="hidden mt-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg"
+                    role="alert">
+                    Thank you! Your message has been sent.
+                </div>
+
+            </div>
+        </section>
+        <hr class="themed-line">
+        <hr class="themed-line">
+        <div class="flex justify-end mt-8">
+
+            <div
+                class="footer-container p-6 md:p-8 rounded-lg shadow-lg w-full md:w-100 hover:scale-105 hover:shadow-xl transition-transform cursor-pointer border-2 border-[--accent-color]">
+
+                <div class="flex flex-col items-center gap-4 ">
+                    <!-- Profile Photo -->
+                    <div class="w-20 h-20 rounded-3xl overflow-hidden  shadow-md border-2 border-[--accent-color]">
+                        <img src="./Assets/Professional_Image.jpg" alt="Profile Picture"
+                            class="object-cover w-full h-full ">
+                    </div>
+                    <!-- Text Content -->
+                    <div>
+                        <p class="font-bold text-lg text-center">Nikhil Balasaheb Rahinj.</p>
+                        <p class="text-sm mt-1">Email :- nikhilrahinj1234@gmail.com</p>
+                        <p class="text-sm text-center">B.Tech in Civil Engineering.</p>
+                    </div>
+                    <p class=" text-xs text-gray-400 mt-4">&copy; 2025 Nikhil Balasaheb Rahinj || All Rights Reserved.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+        
+
+    </main>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // For this example, we'll just show a success message.
+            // In a real application, you would send the form data to a server here.
+
+            const submissionMessage = document.getElementById('submissionMessage');
+            submissionMessage.classList.remove('hidden');
+
+            // You could also clear the form fields
+            document.getElementById('contactForm').reset();
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            const themeButtons = document.querySelectorAll('.theme-button');
+            const sections = document.querySelectorAll('.animate-on-scroll');
+            const sectionHeaders = document.querySelectorAll('.section-header');
+
+            // --- Theme Switcher ---
+            const currentTheme = localStorage.getItem('theme') || 'default';
+            document.body.className = `theme-${currentTheme}`;
+            updateActiveThemeButton(currentTheme);
+
+            function updateActiveThemeButton(theme) {
+                themeButtons.forEach(button => {
+                    button.classList.remove('active');
+                    if (button.dataset.theme === theme) {
+                        button.classList.add('active');
+                    }
+                });
+            }
+
+            themeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const theme = button.dataset.theme;
+                    document.body.className = `theme-${theme}`;
+                    localStorage.setItem('theme', theme);
+                    updateActiveThemeButton(theme);
+                });
+            });
+
+            // --- Mobile Menu Toggle ---
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('is-open');
+            });
+            window.toggleMobileMenu = () => {
+                mobileMenu.classList.remove('is-open');
+            };
+
+            // --- Scroll Animation Observer ---
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // --- Welcome Message Animation ---
+            setTimeout(() => {
+                welcomeMessage.classList.add('show');
+                welcomeMessage.innerHTML = `
+                    <h1 class="text-5xl md:text-6xl font-extrabold"></h1>
+                    <p class="text-xl md:text-2xl mt-4"></p>
+                `;
+            }, 1000); // Wait for 1 second before showing the message
+            setTimeout(() => {
+                welcomeMessage.classList.remove('show');
+            }, 5000); // Hide the message after 5 seconds
+
+            // --- 3D Dot Background Animation (using Three.js) ---
+            const sceneContainer = document.getElementById('scene-container');
+            let scene, camera, renderer, particles;
+            let mouseX = 0, mouseY = 0;
+            const windowHalfX = window.innerWidth / 2;
+            const windowHalfY = window.innerHeight / 2;
+
+            function initBackground() {
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                camera.position.z = 200;
+
+                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setPixelRatio(window.devicePixelRatio);
+                sceneContainer.appendChild(renderer.domElement);
+
+                const particleCount = 2000;
+                const geometry = new THREE.BufferGeometry();
+                const positions = [];
+
+                for (let i = 0; i < particleCount; i++) {
+                    const x = (Math.random() - 0.5) * 1000;
+                    const y = (Math.random() - 0.5) * 1000;
+                    const z = (Math.random() - 0.5) * 1000;
+                    positions.push(x, y, z);
+                }
+
+                geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+                const material = new THREE.PointsMaterial({
+                    color: new THREE.Color(getComputedStyle(document.body).getPropertyValue('--dot-color')),
+                    size: 1.5,
+                    blending: THREE.AdditiveBlending,
+                    transparent: true
+                });
+
+                particles = new THREE.Points(geometry, material);
+                scene.add(particles);
+
+                window.addEventListener('resize', onWindowResize, false);
+                document.addEventListener('mousemove', onDocumentMouseMove, false);
+            }
+
+            function onWindowResize() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            function onDocumentMouseMove(event) {
+                mouseX = (event.clientX - windowHalfX) * 0.1;
+                mouseY = (event.clientY - windowHalfY) * 0.1;
+            }
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                particles.rotation.x += 0.0001;
+                particles.rotation.y += 0.0002;
+
+                camera.position.x += (mouseX - camera.position.x) * .005;
+                camera.position.y += (-mouseY - camera.position.y) * .005;
+                camera.lookAt(scene.position);
+
+                renderer.render(scene, camera);
+            }
+
+            initBackground();
+            animate();
+
+            // Update particle color on theme change
+            const observerTheme = new MutationObserver(() => {
+                if (particles && particles.material) {
+                    const newColor = getComputedStyle(document.body).getPropertyValue('--dot-color');
+                    particles.material.color.set(newColor);
+                }
+            });
+            observerTheme.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+        });
+
+        // Simple alert function to replace window.alert
+        function alert(message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: var(--card-bg-color);
+                color: var(--text-color);
+                padding: 20px;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 9999;
+                border: 2px solid var(--accent-color);
+                text-align: center;
+                max-width: 80%;
+            `;
+            alertDiv.innerHTML = `<p>${message}</p>`;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => {
+                document.body.removeChild(alertDiv);
+            }, 3000); // Remove after 3 seconds
+        }
+    </script>
+</body>
+
+</html>
