@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./Assets/Professional_Image.jpg" />
+    <title>Nikhil R. Digital Resume</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .resume-container {
+            max-width: 960px;
+            margin: 2rem auto;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transition: box-shadow 0.3s ease;
+        }
+        .hor-line{
+            border:1px solid;
+        }
+        .theme-button {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .theme-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .progress-bar-container {
+            height: 1rem;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        /* Utility class for justified text */
+        .text-justify {
+            text-align: justify;
+        }
+
+        /* Theme-specific styles using a data attribute on the body */
+        body[data-theme="civil-blue"] {
+            background-color: #F0F4F8;
+            color: #1A202C;
+        }
+
+        body[data-theme="civil-blue"] .resume-container {
+            background-color: #FFFFFF;
+        }
+
+        body[data-theme="civil-blue"] .text-primary {
+            color: #2D659E;
+        }
+
+        body[data-theme="civil-blue"] .border-primary {
+            border-color: #2D659E;
+        }
+
+        body[data-theme="civil-blue"] .bg-primary {
+            background-color: #2D659E;
+        }
+
+        body[data-theme="civil-blue"] .footer-container {
+            background-color: #F0F4F8;
+            color: #2D659E;
+            border: 2px solid #2d652d;
+        }
+
+        body[data-theme="data-purple"] {
+            background-color: #1A1A2E;
+            color: #E8E8E8;
+        }
+
+        body[data-theme="data-purple"] .resume-container {
+            background-color: #22223B;
+        }
+
+        body[data-theme="data-purple"] .text-primary {
+            color: #8A64C2;
+        }
+
+        body[data-theme="data-purple"] .border-primary {
+            border-color: #8A64C2;
+        }
+
+        body[data-theme="data-purple"] .bg-primary {
+            background-color: #8A64C2;
+        }
+
+        body[data-theme="data-purple"] .footer-container {
+            background-color: #1A1A2E;
+            color: #8A64C2;
+            border: 2px solid #8A64C2;
+        }
+
+        body[data-theme="classic-dark"] {
+            background-color: #2D3748;
+            color: #A0AEC0;
+        }
+
+        body[data-theme="classic-dark"] .resume-container {
+            background-color: #1A202C;
+        }
+
+        body[data-theme="classic-dark"] .text-primary {
+            color: #4FD1C5;
+        }
+
+        body[data-theme="classic-dark"] .border-primary {
+            border-color: #4FD1C5;
+        }
+
+        body[data-theme="classic-dark"] .bg-primary {
+            background-color: #4FD1C5;
+        }
+
+        body[data-theme="classic-dark"] .footer-container {
+            background-color: #2D3748;
+            color: #4FD1C5;
+            border: 2px solid #4FD1C5;
+        }
+
+        body[data-theme="modern-green"] {
+            background-color: #F0FFF4;
+            color: #2D3748;
+        }
+
+        body[data-theme="modern-green"] .resume-container {
+            background-color: #FFFFFF;
+        }
+
+        body[data-theme="modern-green"] .text-primary {
+            color: #38A169;
+        }
+
+        body[data-theme="modern-green"] .border-primary {
+            border-color: #38A169;
+        }
+
+        body[data-theme="modern-green"] .bg-primary {
+            background-color: #38A169;
+        }
+
+        body[data-theme="modern-green"] .footer-container {
+            background-color: #fbfffc;
+            color: #38A169;
+            border: 2px solid #38A169;
+        }
+    </style>
+</head>
+
+<body data-theme="civil-blue">
+    <!-- Theme Switcher Buttons -->
+    <div class="flex flex-col items-center gap-2 p-4">
+        <h2 class="text-lg font-semibold">Choose a Theme</h2>
+        <div class="flex justify-center items-center gap-4">
+            <button
+                class="theme-button bg-blue-500 hover:bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center text-lg"
+                onclick="setTheme('civil-blue')" title="Civil (Blue)">
+                <i class="fas fa-building"></i>
+            </button>
+            <button
+                class="theme-button bg-purple-500 hover:bg-purple-600 text-white w-10 h-10 rounded-full flex items-center justify-center text-lg"
+                onclick="setTheme('data-purple')" title="Data (Purple)">
+                <i class="fas fa-database"></i>
+            </button>
+            <button
+                class="theme-button bg-gray-700 hover:bg-gray-800 text-white w-10 h-10 rounded-full flex items-center justify-center text-lg"
+                onclick="setTheme('classic-dark')" title="Classic (Dark)">
+                <i class="fas fa-star"></i>
+            </button>
+            <button
+                class="theme-button bg-green-500 hover:bg-green-600 text-white w-10 h-10 rounded-full flex items-center justify-center text-lg"
+                onclick="setTheme('modern-green')" title="Modern (Green)">
+                <i class="fas fa-leaf"></i>
+            </button>
+        </div>
+    </div>
+    <!-- Main Resume Container -->
+    <div class="resume-container rounded-lg p-6 md:p-12">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-primary">Nikhil B. Rahinj</h1>
+            <p class="text-md mt-2">
+                <span class="inline-block">A/P Khadkighat, Gogalwadi</span> |
+                <span class="inline-block">Beed, Maharashtra</span> |
+                <span class="inline-block">+91 9579893188</span> |
+                <a href="mailto:nikhilrahinj1234@gmail.com"
+                    class="hover:underline text-primary">nikhilrahinj1234@gmail.com</a> |
+                <a href="./index.html" class="hover:underline text-primary">Portfolio</a> |
+                <!-- <a href="#" class="hover:underline text-primary">Portfolio/GitHub</a> -->
+            </p>
+            
+        </div >
+        | <a href="#objective" class="hover:underline text-primary">Career Objective</a> 
+        | <a href="#education" class="hover:underline text-primary">Education</a> 
+        | <a href="#skills" class="hover:underline text-primary">Skills</a> 
+        | <a href="#projects" class="hover:underline text-primary">Academic Projects</a> 
+        | <a href="#certifications" class="hover:underline text-primary">Certificates</a> 
+        | <a href="#internships" class="hover:underline text-primary">Internships</a> 
+        | <a href="#achievements" class="hover:underline text-primary">Achievements</a> 
+        | <a href="#interest" class="hover:underline text-primary">Interests</a> 
+        | <a href="#personal-info" class="hover:underline text-primary">Personal Details</a> |
+        
+        <br>
+        <br>
+        <hr class="hor-line">
+        <br>
+        
+        <!-- Section: Summary -->
+        <div class="mb-8" id="objective">
+            <h2 class="text-2xl font-bold border-b-2 border-primary pb-2 mb-4 text-primary">Career Objective</h2>
+            <p class="text-sm md:text-base leading-relaxed text-justify indent-4">
+                To leverage my <b class="text-primary"> knowledge of civil engineering</b> fundamentals including <b
+                    class="text-primary"> planning, drafting, estimation, and
+                    modern design tools </b>to contribute to <b class="text-primary"> quality project delivery</b>,
+                while continuously upgrading <b class="text-primary"> my skills in
+                    the field.</b>
+            </p>
+        </div>
+
+        <!-- Section: Education -->
+        <div class="mb-8" id="education">
+            <h2 class="text-2xl font-bold border-b-2 border-primary pb-2 mb-4 text-primary">Education</h2>
+            <!-- Bachelor's Degree -->
+            <div class="mb-4">
+                <div class="flex justify-between items-start mb-1">
+                    <h3 class="font-semibold text-primary">B.Tech In Civil Engineering.</h3>
+                    <span class="text-sm text-right">June, 2026</span>
+                </div>
+                <p>Savitribai Phule Pune University | <span class="text-sm">Pune, Maharashtra.</span></p>
+                <p class="text-sm mt-1">CGPA: 8.62.</p>
+            </div>
+            <!-- Diploma -->
+            <div class="mb-4">
+                <div class="flex justify-between items-start mb-1">
+                    <h3 class="font-semibold text-primary">Diploma in Civil Engineering.</h3>
+                    <span class="text-sm text-right">June, 2023.</span>
+                </div>
+                <p>Government Polytechnic Nanded | <span class="text-sm">Nanded, Maharashtra.</span></p>
+                <p class="text-sm mt-1">Percentage: 85.05%.</p>
+            </div>
+            <!-- 10th Grade -->
+            <div>
+                <div class="flex justify-between items-start mb-1">
+                    <h3 class="font-semibold text-primary">10th Standard (Secondary Education)</h3>
+                    <span class="text-sm text-right">July, 2020</span>
+                </div>
+                <p>Nagnath Vidhyalaya Morgaon | <span class="text-sm">Beed, Maharashtra.</span></p>
+                <p class="text-sm mt-1">Percentage: 85.80%.</p>
+            </div>
+        </div>
+
+        <!-- Section: Skills -->
+        <div class="mb-8" id="skills">
+            <h2 class="text-2xl font-bold border-b-2 border-primary pb-2 mb-4 text-primary">Skills</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Technical Skills with Progress Bars -->
+                <div>
+                    <h4 class="font-semibold mb-2 text-primary">Technical Skills</h4>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <span class="w-1/3 text-sm font-medium">Revit Architecture.</span>
+                            <div class="w-2/3 bg-gray-200 rounded-full progress-bar-container">
+                                <div class="bg-blue-500 progress-bar rounded-full" style="width: 87.20%;"></div>
+                            </div>
+                            <span class="text-sm font-medium">87.20%</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="w-1/3 text-sm font-medium">AutoCAD</span>
+                            <div class="w-2/3 bg-gray-200 rounded-full progress-bar-container">
+                                <div class="bg-red-500 progress-bar rounded-full" style="width: 80%;"></div>
+                            </div>
+                            <span class="text-sm font-medium">80%</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="w-1/3 text-sm font-medium">QGIS</span>
+                            <div class="w-2/3 bg-gray-200 rounded-full progress-bar-container">
+                                <div class="bg-green-500 progress-bar rounded-full" style="width: 70%;"></div>
+                            </div>
+                            <span class="text-sm font-medium">70%</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="w-1/3 text-sm font-medium">Excel</span>
+                            <div class="w-2/3 bg-gray-200 rounded-full progress-bar-container">
+                                <div class="bg-yellow-500 progress-bar rounded-full" style="width: 80%;"></div>
+                            </div>
+                            <span class="text-sm font-medium">80%</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Soft Skills with Progress Bars -->
+                <div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <span class="w-1/3 text-sm font-medium">MS Office Tools</span>
+                            <div class="w-2/3 bg-gray-200 rounded-full progress-bar-container">
+                                <div class="bg-teal-500 progress-bar rounded-full" style="width: 100%;"></div>
+                            </div>
+                            <span class="text-sm font-medium">100%</span>
+                        </div>
+                        
+                        <div class="flex items-center gap-4">
+                            <span class="w-1/3 text-sm font-medium">ETABS</span>
+                            <div class="w-2/3 bg-gray-200 rounded-full progress-bar-container">
+                                <div class="bg-orange-500 progress-bar rounded-full" style="width: 78.57%;"></div>
+                            </div>
+                            <span class="text-sm font-medium">78.57%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Projects -->
+        <div class="mb-8" id="projects">
+            <h2 class="text-2xl font-bold border-b-2 border-primary pb-2 mb-4 text-primary">Academic Projects</h2>
+            <div class="mb-6">
+                <h3 class="font-semibold text-primary">1] ==> Integrated Planning, Structural Design, Estimation, and 3D
+                    Modeling of a Residential Building.</h3>
+                <p class="text-sm md:text-base mt-1 leading-relaxed text-justify indent-4 ">
+                    The project focused on the planning, drafting, and design of a G+1 residential building on a plot
+                    size of 292.78 sq.m. The work included preparation of architectural plans, structural analysis, and
+                    design of key elements such as beams, columns, slabs, and footings to ensure stability and safety. A
+                    detailed quantity take-off and cost estimation was carried out to evaluate the financial feasibility
+                    of the project. Additionally, a 3D model of the building was developed to provide a realistic
+                    visualization of the design. This project helped in gaining practical exposure to architectural
+                    planning, structural design, quantity surveying, and modern modeling tools used in civil
+                    engineering.
+                <p class="text-sm mt-1 leading-relaxed">
+                    <b>Tools Used</b>
+                <ul class="list-disc pl-5 text-sm md:text-base">
+                    <li>AutoCAD for Drafting 2D Plans.</li>
+                    <li>Revit Architecture for 3D Modeling.</li>
+                    <li>ETABS for Structural Design.</li>
+                    <li>Excel for Quantity Estimation.</li>
+                </ul>
+                </p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-primary text-justify">2] ==> Revitalization of
+                    Indrayani Riverfront : An Integrated Approach Toward Urban Development and Environmental
+                    Sustainability.</h3>
+                <p class="text-sm md:text-base mt-1 leading-relaxed text-justify indent-4">
+                    Indrayani Riverfront rejuvenation is a holistic and sustainable stepping in with the mission to
+                    improve ecological integrity, cultural heritage, and citizen participation. In bringing together of
+                    facilities such as public parks, tree planting, better ghats, pedestrian paths, and necessary
+                    services, this initiative aims to reclaim the natural character of the river while addressing the
+                    needs of inhabitants and pilgrims. Collaboration of green infrastructure, enhanced connectivity, and
+                    accessible environments generates environmental flexibility and flood mitigation potential. This
+                    redevelopment initiative looks to achieve a peaceful coexistence between urbanization and protection
+                    of the environment, making the Indrayani riverfront a lively, accessible, and spiritually enriching
+                    public space.
+                </p>
+                <p class="text-sm mt-1 leading-relaxed">
+                    <b>Tools Used</b>
+                <ul class="list-disc pl-5 text-sm md:text-base">
+                    <li>QGIS for Making Maps. (Map Degitization).</li>
+                </ul>
+                </p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-primary">3] ==> Slope Analysis Using Spatial Techniques.</h3>
+                <p class="text-sm md:text-base mt-1 leading-relaxed text-justify indent-4">
+                    Slope analysis using spatial techniques offers valuable insights into terrain behavior and planning
+                    strategies. By combining DEM data with geospatial tools, this study demonstrates a robust method for
+                    assessing terrain stability, reducing disaster risk, and enhancing environmental planning.
+                </p>
+                <p class="text-sm mt-1 leading-relaxed">
+                    <b>Tools Used</b>
+                <ul class="list-disc pl-5 text-sm md:text-base">
+                    <li>QGIS, ArcGIS for Making Maps. (Map Degitization).</li>
+                </ul>
+                </p>
+            </div>
+        </div>
+        <!-- Section: Certifications -->
+        <div class="mb-8" id="certifications">
+            <h2 class="text-2xl font-bold border-b-2 border-primary pb-2 mb-4 text-primary">Certifications/ Certificates
+            </h2>
+            <ul class="list-disc pl-5 text-sm md:text-base leading-relaxed">
+                <li>Revit Architecture By Autodesk.</li>
+                <li>Wastewater Treatment and Recycling By IIT Kharagpur.</li>
+
+            </ul>
+        </div>
+        <!-- Section: Experience/Internships -->
+        <div class="mb-8" id="internships">
+            <h2 class="text-2xl font-bold border-b-2 border-primary pb-2 mb-4 text-primary">Experience/Internships</h2>
+            <div class="flex justify-between items-start mb-2">
+                <h3 class="font-semibold text-primary">1] ==> Site Engineer.</h3>
+                <span class="text-sm text-right">01 July 2025 - 31 July 2025.</span>
+            </div>
+            <p>Ekvira Properties | <span class="text-sm">Pune, Maharashtra.</span></p>
+            <ul class="list-disc pl-5 text-sm md:text-base mt-2 leading-relaxed text-justify">
+                <li>Supervise daily site work.</li>
+                <li>Conduct site inspections and safety checks.</li>
+            </ul>
+            <!-- Internship 2 -->
+            <div class="flex justify-between items-start mb-2">
+                <h3 class="font-semibold text-primary">2] ==> Trainee – Autodesk Revit.</h3>
+                <span class="text-sm text-right">15 June - 16 July 2024.</span>
+            </div>
+            <p>ATS Learning Solutions. | <span class="text-sm">Pune, Maharashtra.</span></p>
+            <ul class="list-disc pl-5 text-sm md:text-base mt-2 leading-relaxed text-justify">
+                <li>Prepared basic 2D drafts and 3D models of residential building layouts using Autodesk Revit.</li>
+                <li>Learned plan drafting, elevation detailing, and quantity estimation through Revit tools.</li>
+            </ul>
+        </div>
+
+        <!-- Section: Achievements -->
+        <div class="mb-8" id="achievements">
+            <h2 class="text-2xl font-bold border-b-2 border-primary pb-2 mb-4 text-primary">Achievements</h2>
+            <div class="flex justify-between items-start mb-2">
+                <h3 class="font-semibold text-primary">1] ==> Research Work Poster Presentation Competition at IIT
+                    Bombay.</h3>
+                <span class="text-sm text-right">17 December 2024</span>
+            </div>
+            <ul class="list-disc pl-5 text-sm md:text-base leading-relaxed">
+                <li>
+                    <p class="text-sm md:text-base mt-1 leading-relaxed text-justify">Revitalization of indrayani riverfront : an integrated approach toward urban development and
+                        environmental sustainability. | <span class="text-sm">B.tech Project.</span></p>
+                </li>
+            </ul>
+            <div class="flex justify-between items-start mb-2">
+                <h3 class="font-semibold text-primary">2] ==> Smart Cities - A Sustainable Development.</h3>
+                <span class="text-sm text-right">29 January - 02 February 2024.</span>
+            </div>
+            <ul class="list-disc pl-5 text-sm md:text-base leading-relaxed">
+                <li>
+                    <p class="text-sm md:text-base mt-1 leading-relaxed text-justify">Organized by Student Chapter (MITAoE) of Indian Geotechnical Society's Pune Chapter. | <span
+                            class="text-sm">Gold Grade.</span></p>
+                </li>
+            </ul>
+            <div class="flex justify-between items-start mb-2">
+                <h3 class="font-semibold text-primary">3] ==> Speech Competition at Government Polytechnic Nanded.</h3>
+                <span class="text-sm text-right">30 April 2022</span>
+            </div>
+            <ul class="list-disc pl-5 text-sm md:text-base leading-relaxed">
+                <li>
+                    <p class="text-sm md:text-base mt-1 leading-relaxed text-justify">Birth Anniversary of Chhatrapati Shivaji Maharaj, Mahatma Jyotiba Phule And Dr. B. R. Ambedkar. |
+                        <span class="text-sm">Public Speech.</span>
+                    </p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Section: Interests -->
+        <div class="mb-8" id="interest">
+            <h2 class="text-2xl font-bold border-b-2 border-primary pb-2 mb-4 text-primary">Interests</h2>
+            <ul class="list-disc pl-5 text-sm md:text-base leading-relaxed">
+                <li>Reading Books.</li>
+                <li>Listening Music.</li>
+                <li>Watching Documentries.</li>
+                <li>Programming (Coding).</li>
+            </ul>
+        </div>
+        <!-- Section: Personal Details -->
+        <div class="mb-8" id="personal-info">
+            <h2 class="text-2xl font-bold border-b-2 border-primary pb-2 mb-4 text-primary">Personal Details</h2>
+            <ul class="list-disc pl-5 text-sm md:text-base leading-relaxed text-justify">
+                <li>Date of Birth :- 11 December 2004.</li>
+                <li>Marital Status :- Unmarried.</li>
+                <li>Known Languages :- Marathi, Hindi, English.</li>
+                <li>Corresponding Address :- Dnyanai Nivas, Near Waghjai Mata Mandir, Dehu Phata, Alandi, Pune - 412105.
+                </li>
+            </ul>
+        </div>
+        <!-- Footer Section -->
+        <!-- Footer Section -->
+        <div class="flex justify-end mt-8">
+
+            <div
+                class="footer-container p-6 md:p-8 rounded-lg shadow-lg w-full md:w-1/2 hover:scale-105 hover:shadow-xl transition-transform cursor-pointer">
+
+                <div class="flex flex-col items-center gap-4">
+                    <!-- Profile Photo -->
+                    <div class="w-20 h-20 rounded-3xl overflow-hidden border-1 border-primary shadow-md">
+                        <img src="./Assets/Professional_Image.jpg" alt="Profile Picture"
+                            class="object-cover w-full h-full">
+                    </div>
+                    <!-- Text Content -->
+                    <div>
+                        <p class="font-bold text-lg text-center">Nikhil B. Rahinj</p>
+                        <p class="text-sm mt-1">Email :- nikhilrahinj1234@gmail.com</p>
+                        <p class="text-sm text-center">B.Tech in Civil Engineering.</p>
+                    </div>
+                    <p class=" text-xs text-gray-400 mt-4">&copy; 2025 Nikhil B. Rahinj || All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+       <div class=" p-6 md:p-4 rounded-lg w-full md:w-1/3  transition-transform cursor-pointe r">
+        <a href="./index.html"
+            class="text-primary border-1 px-12 py-3 rounded-full font-bold shadow-md hover:shadow-lg transition-shadow duration-300 border-1 border-primary">
+            Back To Portfolio
+        </a>
+        </div>
+        <script>
+            // Set the theme when the button is clicked and save it to local storage.
+            function setTheme(themeName) {
+                document.body.setAttribute('data-theme', themeName);
+                localStorage.setItem('resumeTheme', themeName);
+            }
+
+            // Apply the saved theme on page load.
+            document.addEventListener('DOMContentLoaded', () => {
+                const savedTheme = localStorage.getItem('resumeTheme');
+                if (savedTheme) {
+                    document.body.setAttribute('data-theme', savedTheme);
+                }
+            });
+        </script>
+</body>
+
+</html>
